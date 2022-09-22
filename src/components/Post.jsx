@@ -26,6 +26,17 @@ export function Post(props) {
         </p>
       </div>
 
-    </article>
+      <form className={styles.commentForm}>
+        <strong>Deixe seu feedback</strong>
+
+        <textarea 
+        placeholder="Deixe um comentario"
+        />
+
+        <button type="submit">Publicar</button>
+
+      </form>
+
+    </article >
   )
 }
