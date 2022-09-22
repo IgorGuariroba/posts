@@ -33,7 +33,9 @@ export function Post(props) {
         placeholder="Deixe um comentario"
         />
 
+      <footer>
         <button type="submit">Publicar</button>
+      </footer>
 
       </form>
 
