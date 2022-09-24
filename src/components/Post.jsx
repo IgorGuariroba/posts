@@ -1,26 +1,51 @@
+import { format, formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/esm/locale/pt-BR";
 import { Avatar } from "./Avatar";
 import { Comment } from "./Comment";
+
+
 import styles from "./Post.module.css";
 
-export function Post(props) {
+export function Post({author,content,publisheAt}) {
+  const publishedDateFormated = format(publisheAt,"d 'de' LLLL 'às' HH:mm'h'",{
+    locale:ptBR
+  })
+
+  const publishedRelativeToNow = formatDistanceToNow(publisheAt,{
+    locale:ptBR,
+    addSuffix:true,
+  })
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-            <Avatar hasBorder src="https://avatars.githubusercontent.com/u/26732044?v=4" />
+            <Avatar hasBorder src={author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>Tobias Fried</strong>
-            <span>rektdeckard</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
 
 
-        <time title='28 de Setembro as 08:48' dateTime="2022-08-28 08:48:00">Publicado há 1h</time>
+        <time
+         title={publishedDateFormated} 
+         dateTime={publisheAt.toISOString()}>
+          {publishedRelativeToNow}
+          </time>
       </header>
 
       <div className={styles.content}>
-        <p>{props.content}</p>
-        <p><a href="#">nova.desing/feitopormim</a></p>
+        {content.map(cont => {
+          if(cont.type == 'paragrath'){
+              return <p>{cont.content}</p>
+          }
+
+          if(cont.type == 'link'){
+              return <p><a href="#">{cont.content}</a></p>
+          }
+        })}
+        
         <p>
           <a href="#">#nova</a>{' '}
           <a href="#">#desing</a>{' '}
