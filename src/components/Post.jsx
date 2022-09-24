@@ -58,11 +58,11 @@ export function Post({author,content,publisheAt}) {
       <div className={styles.content}>
         {content.map(cont => {
           if(cont.type == 'paragrath'){
-              return <p>{cont.content}</p>
+              return <p key={cont.content}>{cont.content}</p>
           }
 
           if(cont.type == 'link'){
-              return <p><a href="#">{cont.content}</a></p>
+              return <p key={cont.content}><a href="#">{cont.content}</a></p>
           }
         })}
         
@@ -94,6 +94,7 @@ export function Post({author,content,publisheAt}) {
           comments.map(comment => {
             return(
             <Comment
+            key={comment}
             content={comment}
             />
             )
