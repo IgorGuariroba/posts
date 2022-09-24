@@ -8,39 +8,47 @@ import { Comment } from "./Comment";
 import styles from "./Post.module.css";
 
 
-export function Post({author,content,publisheAt}) {
+export function Post({ author, content, publisheAt }) {
 
   const [comments, setCommets] = useState([
     'Post muito top, hein?'
   ])
 
-  const [newCommentText,setNewCommentText] = useState('')
+  const [newCommentText, setNewCommentText] = useState('')
 
-  const publishedDateFormated = format(publisheAt,"d 'de' LLLL 'às' HH:mm'h'",{
-    locale:ptBR
+  const publishedDateFormated = format(publisheAt, "d 'de' LLLL 'às' HH:mm'h'", {
+    locale: ptBR
   })
 
-  const publishedRelativeToNow = formatDistanceToNow(publisheAt,{
-    locale:ptBR,
-    addSuffix:true,
+  const publishedRelativeToNow = formatDistanceToNow(publisheAt, {
+    locale: ptBR,
+    addSuffix: true,
   })
 
-  function handleCreateNewComment(){
+  function handleCreateNewComment() {
     event.preventDefault()
 
-    setCommets([...comments,newCommentText]);
+    setCommets([...comments, newCommentText]);
     setNewCommentText('')
   }
-  
-  function handleNewCommentChange(){
+
+  function handleNewCommentChange() {
     setNewCommentText(event.target.value)
+  }
+
+  function deleteComment(commentToDelete) {
+    const commentsWithoutDeleteOne = comments.filter(comment =>{
+      return comment != commentToDelete;
+    })
+    
+    setCommets(commentsWithoutDeleteOne);
   }
 
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-            <Avatar hasBorder src={author.avatarUrl} />
+          <Avatar hasBorder src={author.avatarUrl} />
           <div className={styles.authorInfo}>
             <strong>{author.name}</strong>
             <span>{author.role}</span>
@@ -49,23 +57,23 @@ export function Post({author,content,publisheAt}) {
 
 
         <time
-         title={publishedDateFormated} 
-         dateTime={publisheAt.toISOString()}>
+          title={publishedDateFormated}
+          dateTime={publisheAt.toISOString()}>
           {publishedRelativeToNow}
-          </time>
+        </time>
       </header>
 
       <div className={styles.content}>
         {content.map(cont => {
-          if(cont.type == 'paragrath'){
-              return <p key={cont.content}>{cont.content}</p>
+          if (cont.type == 'paragrath') {
+            return <p key={cont.content}>{cont.content}</p>
           }
 
-          if(cont.type == 'link'){
-              return <p key={cont.content}><a href="#">{cont.content}</a></p>
+          if (cont.type == 'link') {
+            return <p key={cont.content}><a href="#">{cont.content}</a></p>
           }
         })}
-        
+
         <p>
           <a href="#">#nova</a>{' '}
           <a href="#">#desing</a>{' '}
@@ -76,27 +84,28 @@ export function Post({author,content,publisheAt}) {
       <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu feedback</strong>
 
-        <textarea 
-        name="comment"
-        placeholder="Deixe um comentario"
-        value={newCommentText}
-        onChange={handleNewCommentChange}
+        <textarea
+          name="comment"
+          placeholder="Deixe um comentario"
+          value={newCommentText}
+          onChange={handleNewCommentChange}
         />
 
-      <footer>
-        <button type="submit">Publicar</button>
-      </footer>
+        <footer>
+          <button type="submit">Publicar</button>
+        </footer>
 
       </form>
 
       <div className={styles.commentList}>
         {
           comments.map(comment => {
-            return(
-            <Comment
-            key={comment}
-            content={comment}
-            />
+            return (
+              <Comment
+                key={comment}
+                content={comment}
+                onDeleteComment={deleteComment}
+              />
             )
           })
         }
